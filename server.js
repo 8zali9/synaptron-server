@@ -19,15 +19,17 @@ app.use(
 );
 
 app.route("/").get(async (req, res) => {
+  const { prompt } = req.body;
   const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-  const prompt = "Prove logically by contardiction, that 2+2=4.";
-
-  const result = await model.generateContent(prompt);
-  const response = await result.response;
-  const text = response.text();
-  console.log(text);
-  res.send(text);
+  if (!prompt) {
+    return res.status(404).send({ error: "No prompt provided." });
+  } else {
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+    return res.send(text);
+  }
 });
 
 app.listen(port, () => {
