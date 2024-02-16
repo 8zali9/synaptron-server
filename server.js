@@ -29,11 +29,13 @@ app.route("/").get(async (req, res) => {
       history: [
         {
           role: "user",
-          parts: "Hello, I have something to ask or say.",
+          parts:
+            "Craft an engaging conversation as a co-pilot, offering concise and insightful responses while also utilizing your ability to search the internet for relevant information. Later, provide the researched content under a separate heading. Elevate the prompt to captivate the capabilities of gemeini, showcasing its capacity to generate top-tier responses..",
         },
         {
           role: "model",
-          parts: "Great to meet you. What would you like to know?",
+          parts:
+            "Ready to soar through the skies together! Let's dive into engaging conversations and tap into the vast resources of the internet for a seamless flight. Buckle up for a journey of insightful exchanges and expertly curated information. Let's make every interaction an exhilarating experience!",
         },
       ],
       generationConfig: {
