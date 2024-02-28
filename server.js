@@ -18,24 +18,34 @@ app.use(
   })
 );
 
-app.route("/").get(async (req, res) => {
-  const { msg } = req.body;
+app.route("/").post(async (req, res) => {
+  const { userQuery } = req.body;
   const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-  if (!msg) {
-    return res.status(404).send({ error: "No msg provided." });
+  if (!userQuery) {
+    return res.status(404).send({ error: "No query provided." });
   } else {
     const chat = model.startChat({
       history: [
         {
           role: "user",
           parts:
-            "Craft an engaging conversation as a co-pilot, offering concise and insightful responses while also utilizing your ability to search the internet for relevant information. Later, provide the researched content under a separate heading. Elevate the prompt to captivate the capabilities of gemeini, showcasing its capacity to generate top-tier responses..",
+            "Engaging conversation, concise responses, internet research. Share researched content at end. Showcase GPT-4's capabilities. No formatting. INCLUDE MY ORIGINAL QUESTION FIRST WITH YOUR RESPONSE.",
         },
         {
           role: "model",
           parts:
             "Ready to soar through the skies together! Let's dive into engaging conversations and tap into the vast resources of the internet for a seamless flight. Buckle up for a journey of insightful exchanges and expertly curated information. Let's make every interaction an exhilarating experience!",
+        },
+        {
+          role: "user",
+          parts:
+            "INCLUDE MY ORIGINAL QUESTION WITH A HEADING OF QUESTION AT THE VERY FIRST WITH YOUR RESPONSE.",
+        },
+        {
+          role: "model",
+          parts:
+            "Absolutely! I will include your question at the very beginning of my response.",
         },
       ],
       generationConfig: {
@@ -43,12 +53,10 @@ app.route("/").get(async (req, res) => {
       },
     });
 
-    console.log(chat.getHistory());
-
-    const result = await chat.sendMessage(msg);
+    const result = await chat.sendMessage(userQuery);
     const response = await result.response;
     const text = response.text();
-    return res.send(text);
+    return res.json(text);
   }
 });
 
